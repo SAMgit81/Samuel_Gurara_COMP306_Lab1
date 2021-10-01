@@ -21,33 +21,35 @@ namespace Samuel_Gurara_COMP306_Lab1
         }
         public async void GetBucketList()
         {
-            var builder = new ConfigurationBuilder()
-                                .SetBasePath(Directory.GetCurrentDirectory())
-                                .AddJsonFile("AppSettings.json", optional: true, reloadOnChange: true);
-
-            var accessKeyID = builder.Build().GetSection("AWSCredentials").GetSection("AccesskeyID").Value;
-            var secretKey = builder.Build().GetSection("AWSCredentials").GetSection("Secretaccesskey").Value;
-
-            var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
-
-            using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+            BasicAWSCredentials credentials = config();
+            try
             {
-                ListBucketsResponse response = await s3Client.ListBucketsAsync();
-                foreach (S3Bucket bucket in response.Buckets)
+                using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
                 {
-                    Console.WriteLine(bucket.BucketName + " " + bucket.CreationDate.ToShortDateString());
-                }
-                int combo_list = response.Buckets.Count;
-                if (combo_list > 0)
-                {
+                    ListBucketsResponse response = await s3Client.ListBucketsAsync();
                     foreach (S3Bucket bucket in response.Buckets)
                     {
-                        cbxBucket.Items.Add(bucket.BucketName);
+                        Console.WriteLine(bucket.BucketName + " " + bucket.CreationDate.ToShortDateString());
+                    }
+                    int combo_list = response.Buckets.Count;
+                    if (combo_list > 0)
+                    {
+                        foreach (S3Bucket bucket in response.Buckets)
+                        {
+                            cbxBucket.Items.Add(bucket.BucketName);
+                        }
                     }
                 }
             }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine("Error encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
         }
-   
 
         private void btnBackToMain_Click(object sender, EventArgs e)
         {
@@ -86,26 +88,30 @@ namespace Samuel_Gurara_COMP306_Lab1
             {
                 return;
             }
-            var builder = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("AppSettings.json", optional: true, reloadOnChange: true);
-
-            var accessKeyID = builder.Build().GetSection("AWSCredentials").GetSection("AccesskeyID").Value;
-            var secretKey = builder.Build().GetSection("AWSCredentials").GetSection("Secretaccesskey").Value;
-
-            var credentials = new Amazon.Runtime.BasicAWSCredentials(accessKeyID, secretKey);
-
-            using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+            //Extracted Method
+            BasicAWSCredentials credentials = config();
+            try
             {
-                ListObjectsRequest request = new ListObjectsRequest(); 
-                List<Obj> datasource = new List<Obj>();
-                request.BucketName = bucketName;
-                ListObjectsResponse response = await s3Client.ListObjectsAsync(request);
-                foreach (S3Object o in response.S3Objects)
+                using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
                 {
-                    datasource.Add(new Obj { object_name = o.Key, object_size = o.Size });
+                    ListObjectsRequest request = new ListObjectsRequest();
+                    List<Obj> datasource = new List<Obj>();
+                    request.BucketName = bucketName;
+                    ListObjectsResponse response = await s3Client.ListObjectsAsync(request);
+                    foreach (S3Object o in response.S3Objects)
+                    {
+                        datasource.Add(new Obj { object_name = o.Key, object_size = o.Size });
+                    }
+                    DataObjectGrid.DataSource = datasource;
                 }
-                DataObjectGrid.DataSource = datasource;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine("Error encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", ex.Message);
             }
         }
         private void cbxBucket_SelectedIndexChanged(object sender, EventArgs e)
@@ -127,14 +133,8 @@ namespace Samuel_Gurara_COMP306_Lab1
             string Key = Path.GetFileName(filepath);
             try
             {
-                var builder = new ConfigurationBuilder()
-                       .SetBasePath(Directory.GetCurrentDirectory())
-                       .AddJsonFile("AppSettings.json", optional: true, reloadOnChange: true);
-
-                var accessKeyID = builder.Build().GetSection("AWSCredentials").GetSection("AccesskeyID").Value;
-                var secretKey = builder.Build().GetSection("AWSCredentials").GetSection("Secretaccesskey").Value;
-
-                var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
+                //Extracted Method
+                BasicAWSCredentials credentials = config();
                 using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
                 {
                     var fileTransferUtility = new TransferUtility(s3Client);
@@ -152,6 +152,20 @@ namespace Samuel_Gurara_COMP306_Lab1
             {
                 Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", ex.Message);
             }
+        }
+
+        //Extracted Method
+        private static BasicAWSCredentials config()
+        {
+            var builder = new ConfigurationBuilder()
+                                .SetBasePath(Directory.GetCurrentDirectory())
+                                .AddJsonFile("AppSettings.json", optional: true, reloadOnChange: true);
+
+            var accessKeyID = builder.Build().GetSection("AWSCredentials").GetSection("AccesskeyID").Value;
+            var secretKey = builder.Build().GetSection("AWSCredentials").GetSection("Secretaccesskey").Value;
+
+            var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
+            return credentials;
         }
     }   
 }

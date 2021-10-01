@@ -8,16 +8,10 @@ using System.IO;
 
 namespace Samuel_Gurara_COMP306_Lab1
 {
-   public class Bucket
+    public class Bucket
     {
         public string BName { get; set; }
         public string CreationTime { get; set; }
-
-       /* public Bucket(string bname, string creationT)
-        {
-            this.BName = bname;
-            this.CreationTime = creationT;
-        }*/
         public override string ToString()
         {
             return $"{BName}";
@@ -36,15 +30,27 @@ namespace Samuel_Gurara_COMP306_Lab1
             var secretKey = builder.Build().GetSection("AWSCredentials").GetSection("Secretaccesskey").Value;
 
             var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
-
-            using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+            try
             {
-                ListBucketsResponse response = await s3Client.ListBucketsAsync();
-                foreach (S3Bucket bucket in response.Buckets)
+                using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
                 {
-                    Console.WriteLine(bucket.BucketName + " " + bucket.CreationDate.ToShortDateString());
+                    ListBucketsResponse response = await s3Client.ListBucketsAsync();
+                    foreach (S3Bucket bucket in response.Buckets)
+                    {
+                        Console.WriteLine(bucket.BucketName + " " + bucket.CreationDate.ToShortDateString());
+                    }
                 }
             }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine("Error encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
+
         }
     }
 }
+
