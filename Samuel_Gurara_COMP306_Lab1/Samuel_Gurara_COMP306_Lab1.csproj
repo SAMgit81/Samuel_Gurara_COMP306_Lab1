@@ -132,7 +132,7 @@
   <ItemGroup>
     <Compile Include="AwsBucket.cs" />
     <Compile Include="Bucket.cs" />
-    <Compile Include="ConfigBuilderBase.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="CreateBucket.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,11 +1,8 @@
 ﻿using System;
 using Amazon;
-using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Microsoft.Extensions.Configuration;
 using System.Windows.Forms;
-using System.IO;
 using System.Collections.Generic;
 
 namespace Samuel_Gurara_COMP306_Lab1
@@ -20,24 +17,26 @@ namespace Samuel_Gurara_COMP306_Lab1
        
         private async void GetBucketList()
         {
-            BasicAWSCredentials credentials = config();
+            // BasicAWSCredentials credentials = config();
 
-            try { 
-            using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+            try
             {
-                ListBucketsResponse response = await s3Client.ListBucketsAsync();
-                List<Bucket> datasource = new List<Bucket>();
-                foreach (S3Bucket bucket in response.Buckets)
+                using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
                 {
-                    datasource.Add(new Bucket
+                    ListBucketsResponse response = await s3Client.ListBucketsAsync();
+                    List<Bucket> datasource = new List<Bucket>();
+                    foreach (S3Bucket bucket in response.Buckets)
                     {
-                        BName = bucket.BucketName,
-                        CreationTime = bucket.CreationDate.ToString()
-                    });
+                        datasource.Add(new Bucket
+                        {
+                            BName = bucket.BucketName,
+                            CreationTime = bucket.CreationDate.ToString()
+                        });
+                    }
+                    dataCreateBucket.DataSource = datasource;
                 }
-                dataCreateBucket.DataSource = datasource;
             }
-        }
+
             catch (AmazonS3Exception ex)
             {
                 Console.WriteLine("Error encountered on server. Message:'{0}' when writing an object", ex.Message);
@@ -58,9 +57,7 @@ namespace Samuel_Gurara_COMP306_Lab1
 
         private async void btnCreateBucket_Click(object sender, EventArgs e)
         {
-            BasicAWSCredentials credentials = config();
-
-            using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+            using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
             {
                 string bucketName = txtBucket.Text;
                 if (bucketName.Length < 5)
@@ -75,7 +72,7 @@ namespace Samuel_Gurara_COMP306_Lab1
             }
         }
 
-        private static BasicAWSCredentials config()
+       /* private static BasicAWSCredentials config()
         {
             var builder = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
@@ -86,7 +83,7 @@ namespace Samuel_Gurara_COMP306_Lab1
 
             var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
             return credentials;
-        }
+        }*/
 
     }
 }

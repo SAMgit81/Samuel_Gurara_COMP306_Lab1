@@ -21,10 +21,10 @@ namespace Samuel_Gurara_COMP306_Lab1
         }
         public async void GetBucketList()
         {
-            BasicAWSCredentials credentials = config();
+          //  BasicAWSCredentials credentials = config();
             try
             {
-                using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+                using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
                 {
                     ListBucketsResponse response = await s3Client.ListBucketsAsync();
                     foreach (S3Bucket bucket in response.Buckets)
@@ -89,10 +89,10 @@ namespace Samuel_Gurara_COMP306_Lab1
                 return;
             }
             //Extracted Method
-            BasicAWSCredentials credentials = config();
+           // BasicAWSCredentials credentials = config();
             try
             {
-                using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+                using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
                 {
                     ListObjectsRequest request = new ListObjectsRequest();
                     List<Obj> datasource = new List<Obj>();
@@ -134,8 +134,7 @@ namespace Samuel_Gurara_COMP306_Lab1
             try
             {
                 //Extracted Method
-                BasicAWSCredentials credentials = config();
-                using (AmazonS3Client s3Client = new AmazonS3Client(credentials, RegionEndpoint.USEast1))
+                using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
                 {
                     var fileTransferUtility = new TransferUtility(s3Client);
 
@@ -155,7 +154,7 @@ namespace Samuel_Gurara_COMP306_Lab1
         }
 
         //Extracted Method
-        private static BasicAWSCredentials config()
+       /* private static BasicAWSCredentials config()
         {
             var builder = new ConfigurationBuilder()
                                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -166,6 +165,6 @@ namespace Samuel_Gurara_COMP306_Lab1
 
             var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
             return credentials;
-        }
+        }*/
     }   
 }
