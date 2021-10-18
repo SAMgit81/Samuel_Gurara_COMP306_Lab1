@@ -41,10 +41,12 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
         }
         public async void CreateTable()
         {
-            CreateTableRequest request = new CreateTableRequest
+            try
             {
-                TableName = tableName,
-                AttributeDefinitions = new List<AttributeDefinition>
+                CreateTableRequest request = new CreateTableRequest
+                {
+                    TableName = tableName,
+                    AttributeDefinitions = new List<AttributeDefinition>
                 {
                     new AttributeDefinition
                     {
@@ -57,7 +59,7 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
                         AttributeType = "S"
                     }
                 },
-                KeySchema = new List<KeySchemaElement>
+                    KeySchema = new List<KeySchemaElement>
                 {
                     new KeySchemaElement
                     {
@@ -70,18 +72,23 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
                         KeyType = "RANGE"
                     }
                 },
-                BillingMode = BillingMode.PROVISIONED,
-                ProvisionedThroughput = new ProvisionedThroughput
+                    BillingMode = BillingMode.PROVISIONED,
+                    ProvisionedThroughput = new ProvisionedThroughput
+                    {
+                        ReadCapacityUnits = 10,
+                        WriteCapacityUnits = 10
+                    }
+                };
+                var response = await client.CreateTableAsync(request);
+                if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    ReadCapacityUnits = 10,
-                    WriteCapacityUnits = 10
+                    System.Threading.Thread.Sleep(3000);
+                    Console.WriteLine("Table created successfully");
                 }
-            };
-            var response = await client.CreateTableAsync(request);
-            if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
+            }
+            catch (Exception ex)
             {
-                System.Threading.Thread.Sleep(3000);
-                Console.WriteLine("Table created successfully");
+              
             }
         }
 
