@@ -18,7 +18,6 @@ namespace Samuel_Gurara_COMP306_Lab1
         private async void GetBucketList()
         {
             // BasicAWSCredentials credentials = config();
-
             try
             {
                 using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
@@ -57,19 +56,31 @@ namespace Samuel_Gurara_COMP306_Lab1
 
         private async void btnCreateBucket_Click(object sender, EventArgs e)
         {
-            using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
+            try
             {
-                string bucketName = txtBucket.Text;
-                if (bucketName.Length < 5)
+                using (AmazonS3Client s3Client = new AmazonS3Client(Config.config(), RegionEndpoint.USEast1))
                 {
-                    return;
-                }
-                PutBucketRequest putBucketRequest = new PutBucketRequest();
-                putBucketRequest.BucketName = bucketName;
-                await s3Client.PutBucketAsync(putBucketRequest);
+                    string bucketName = txtBucket.Text;
+                    if (bucketName.Length < 7)
+                    {
+                        return;
+                    }
+                    PutBucketRequest putBucketRequest = new PutBucketRequest();
+                    putBucketRequest.BucketName = bucketName;
+                    await s3Client.PutBucketAsync(putBucketRequest);
 
-                GetBucketList();
+                    GetBucketList();
+                }
             }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine("Error encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", ex.Message);
+            }
+
         }
 
        /* private static BasicAWSCredentials config()
