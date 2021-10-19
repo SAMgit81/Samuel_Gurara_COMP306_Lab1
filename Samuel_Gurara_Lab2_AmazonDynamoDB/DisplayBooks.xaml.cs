@@ -24,7 +24,7 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
         private static string username;
         public BooksView(string user)
         {
-            operations = new DBContext("UserTable");
+            operations = new DBContext("BookShelf");
             username = user;
             InitializeComponent();
             bookshelf = operations.getUserBookshelf(user);

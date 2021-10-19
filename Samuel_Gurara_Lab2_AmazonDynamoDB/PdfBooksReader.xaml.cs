@@ -50,7 +50,7 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
             {
                 var request = new GetObjectRequest()
                 {
-                    BucketName = "Samuel_Gurara_Lab2_AmazonDynamoDB_userbooks",
+                    BucketName = "userbooks",
                     Key = books
                 };
                 var response = await s3Client.GetObjectAsync(request);

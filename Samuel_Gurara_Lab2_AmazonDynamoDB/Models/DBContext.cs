@@ -88,28 +88,34 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
             }
             catch (Exception ex)
             {
-              
+
             }
         }
 
-        public  void InsertItem(string username, string password)
+        public void InsertItem(string username, string password)
         {
-            PutItemRequest request = new PutItemRequest
+            try
             {
-                TableName = tableName,
-                Item = new Dictionary<string, AttributeValue>
+                PutItemRequest request = new PutItemRequest
+                {
+                    TableName = tableName,
+                    Item = new Dictionary<string, AttributeValue>
                 {
                     { "UserName", new AttributeValue { S = username } },
                     { "Password", new AttributeValue { S = password } }
                 }
-            };
-            var response =   client.PutItemAsync(request);
-            if (response.Result.HttpStatusCode == System.Net.HttpStatusCode.OK)
-            {
-                Console.WriteLine("Item added successfully");
+                };
+                var response = client.PutItemAsync(request);
+                if (response.Result.HttpStatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine("Item added successfully");
+                }
             }
+            catch (Exception ex)
+            {
 
             }
+        }
 
         public bool ValidateUser(string username, string password)
         {
@@ -122,13 +128,12 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
                     { "Password", new AttributeValue { S = password } }
                 },
             };
-           var response = client.GetItemAsync(request).Result;
-                if (response.HttpStatusCode == System.Net.HttpStatusCode.OK && response.Item.Count > 0)
-                {
-                    return true;
-                }
+            var response = client.GetItemAsync(request).Result;
+            if (response.HttpStatusCode == System.Net.HttpStatusCode.OK && response.Item.Count > 0)
+            {
+                return true;
+            }
             return false;
-
         }
 
         public void GetBookList(string username)
@@ -154,15 +159,13 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
                     foreach (var val in list)
                     {
                         bookshelf.Books.Add(val[1], Convert.ToInt32(val[0]));
-                    }
-                    
+                    }                 
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
-
         }
 
         public Shelf getUserBookshelf(string username)
