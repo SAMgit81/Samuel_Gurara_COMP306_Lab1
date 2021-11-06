@@ -1,0 +1,42 @@
+﻿@model MovieList
+@{ ViewData["Title"] = "Movie List"; }
+
+
+<div class="wrap-list">
+
+    <h1>Welcome, @Model.Users.UserName!</h1>
+    <p class="lead">
+        <span class="btn-link-red btn-align-right"><a asp-action="CreateMovie" asp-route-email="@Model.Users.Email">Create Movie</a></span>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Poster</th>
+                <th>Title</th>
+                <th>Movie Detail</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Movies)
+            {
+            <tr>
+                <td>
+                    <img src="@item.MovieImage.GetPreSignedURL(DateTime.Now.AddHours(1))"
+                         width="80"
+                         height="80">
+
+                </td>
+                <td>
+                    @item.MovieTitle
+                </td>
+                <td>
+                    <a asp-action="MovieDetail" asp-route-email="@Model.Users.Email"
+                       asp-route-movieId="@item.MovieId">Details</a>
+                </td>
+                
+            </tr>}
+        </tbody>
+    </table>
+</div>

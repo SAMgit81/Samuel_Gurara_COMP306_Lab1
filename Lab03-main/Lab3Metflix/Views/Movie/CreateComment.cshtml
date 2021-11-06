@@ -1,0 +1,29 @@
+﻿@model MoviesRating
+@{ ViewData["Title"] = "Create Comment"; }
+
+
+
+<div class="wrap-form">
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Create Comment &amp; Rating</h1>
+    </div>
+    <form asp-action="CreateComment" method="post">
+        <div class="form-group">
+            <label class="control-label" for="comment">Comment</label>
+            <textarea class="form-control" name="comment" value="@Model.Rating.Comment" aria-label="With textarea"></textarea>
+        </div>
+     @*   <div class="form-group">
+            <label class="control-label" for="rate">Rating(1-10)</label>
+            <textarea class="form-control rating" name="rate" value="@Model.Rating.RateNum" aria-label="With textarea"></textarea>
+        </div>*@
+        <input type="hidden" name="email" value="@Model.Users.Email" />
+        <input type="hidden" name="movieId" value="@Model.Movie.MovieId" />
+        <div class="form-group align-center">
+            <button type="Submit" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+</div>
+
+
+
+

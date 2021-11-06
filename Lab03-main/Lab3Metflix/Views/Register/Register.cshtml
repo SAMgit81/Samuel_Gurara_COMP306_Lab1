@@ -1,0 +1,37 @@
+﻿@model Users
+@{ ViewData["Title"] = "Register"; }
+
+
+
+<div class="wrap-form">
+    <h2 asp-validation-summary="ModelOnly" class="text-danger"></h2>
+    <form asp-action="CreateUser" method="post" class="form-signin">
+        <div class="text-center mb-4">
+            <h2 class="h3 mb-3 font-weight-normal">@ViewData["Title"]</h2>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UserName" class="control-label">Name</label>
+            <input asp-for="UserName" class="form-control" placeholder="Name" required autofocus>
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="control-label">Email address</label>
+            <input asp-for="Email" class="form-control" placeholder="Email address" required autofocus>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password" class="control-label">Password</label>
+            <input asp-for="Password" class="form-control" placeholder="Password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="form-group align-center ">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <a asp-controller="Home" asp-action="Index"  class="btn btn-default">Cancel</a>
+        </div>
+    </form>
+</div>
+

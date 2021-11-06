@@ -1,0 +1,40 @@
+﻿@model MovieBucket
+@{ ViewData["Title"] = "Create Movie"; }
+
+
+<div class="wrap-form">
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Create Movie</h1>
+    </div>
+
+    <form asp-action="CreateMovie" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="@Model.Movie.MovieId" />
+        <input type="hidden" asp-for="@Model.Email" />
+        <div class="form-group">
+            <label asp-for="@Model.Movie.MovieTitle" class="control-label">Title</label>
+            <input asp-for="@Model.Movie.MovieTitle" class="form-control" />
+            <span asp-validation-for="@Model.Movie.MovieTitle" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.MovieImage" class="control-label">Movie Poster</label>
+            <input type="file" asp-for="@Model.MovieImage" class="form-control" accept="image/jpeg" />
+            <span asp-validation-for="@Model.MovieImage" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.MovieVideo" class="control-label">Movie</label>
+            <input type="file" asp-for="@Model.MovieVideo" class="form-control" accept="MovieVideo/avi" />
+            <span asp-validation-for="@Model.MovieVideo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Upload Location</label>
+            <select class="custom-select" asp-for="@Model.SelectedBucket" asp-items="@(new SelectList(Model.Buckets))">
+                <option>Select Bucket</option>
+            </select>
+        </div>
+        <div class="form-group align-center">
+            <input type="submit" value="Upload" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+

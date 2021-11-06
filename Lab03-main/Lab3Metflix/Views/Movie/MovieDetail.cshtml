@@ -1,0 +1,61 @@
+﻿@model UsersMovie
+@{ ViewData["Title"] = "Movie Detail"; }
+
+
+<div class="wrap-detail">
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Movie's Detail</h1>
+    </div>
+    
+    <div class="section-info">
+        <div class="left-area">
+            <img width="200" height="250" src="@Model.Movie.MovieImage.GetPreSignedURL(DateTime.Now.AddHours(1))">
+        </div>
+        <div class="right-area">
+            <ul>
+                <li>
+                    <span class="d-inline-block mb-2">Movie's Title: </span>
+                    <strong class="mb-0">@Model.Movie.MovieTitle</strong>
+                </li>
+
+                <li>
+                    <span class="btn-link-red"><a href="@Model.Movie.MovieVideo.GetPreSignedURL(DateTime.Now.AddHours(1))">Download Movie</a></span>
+                    <span class="btn-link-blue"><a asp-action="CreateComment" asp-route-email="@Model.Users.Email" asp-route-movieId="@Model.Movie.MovieId">Create Comment</a></span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Comment</th>
+                @*<th>Rating</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Movie.Ratings)
+            {
+            <tr>
+                <td>
+                    @item.RateDate
+                </td>
+                <td>
+                    @item.Users.Email
+                </td>
+                <td>
+                    @item.Comment
+                </td>
+               @* <td>
+                    @item.RateNum
+                </td>*@
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
