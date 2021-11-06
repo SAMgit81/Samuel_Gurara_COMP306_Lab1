@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Samuel_Gurara_Lab2_AmazonDynamoDB
 {
@@ -24,7 +15,7 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
         private static string username;
         public BooksView(string user)
         {
-            operations = new DBContext("BookShelf");
+            operations = new DBContext("UserTable");
             username = user;
             InitializeComponent();
             bookshelf = operations.getUserBookshelf(user);

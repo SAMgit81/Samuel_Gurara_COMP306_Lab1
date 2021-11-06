@@ -26,7 +26,7 @@ namespace Samuel_Gurara_Lab2_AmazonDynamoDB
     /// </summary>
     public partial class BooksReaderView : Window
     {
-        DBContext operations = new DBContext("Bookshelf");
+        DBContext operations = new DBContext("UserTable");
         private static string Books;
         private static int pagenumber;
         private static string username;
